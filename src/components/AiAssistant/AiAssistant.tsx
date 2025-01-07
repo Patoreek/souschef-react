@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import PromptInput from "./PromptInput";
 import Chatbox from "./Chatbox";
-
+import axios from "axios";
 interface ChatMessage {
   id: string;
   role: string;
@@ -21,17 +21,31 @@ const AiAssistant = () => {
   useEffect(() => {
     // Log chat history for debugging
     console.log(chatHistory);
-
+    const latestChatPrompt = chatHistory[chatHistory.length - 1];
     // Only call emulateChatbotResponse if the last message is from the user
-    if (
-      chatHistory.length > 0 &&
-      chatHistory[chatHistory.length - 1].role === "user"
-    ) {
+    if (chatHistory.length > 0 && latestChatPrompt.role === "user") {
       setTimeout(() => {
         emulateChatbotResponse();
+        sendPrompt(latestChatPrompt);
       }, 2000);
     }
   }, [chatHistory]);
+
+  const sendPrompt = async (latestChatPrompt: ChatMessage) => {
+    console.log(latestChatPrompt);
+    try {
+      // Make the POST request to the API
+      const response = await axios.post(
+        "http://localhost:3000/ask-chef",
+        latestChatPrompt
+      );
+      console.log(response);
+      // Set the response data in the state
+    } catch (error) {
+      // Handle any errors during the request
+      // setError(error.response ? error.response.data : 'An error occurred');
+    }
+  };
 
   const emulateChatbotResponse = () => {
     const chatLog: ChatMessage = {
