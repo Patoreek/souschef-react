@@ -25,7 +25,7 @@ const AiAssistant = () => {
     // Only call emulateChatbotResponse if the last message is from the user
     if (chatHistory.length > 0 && latestChatPrompt.role === "user") {
       setTimeout(() => {
-        emulateChatbotResponse();
+        // emulateChatbotResponse();
         sendPrompt(latestChatPrompt);
       }, 2000);
     }
@@ -39,7 +39,17 @@ const AiAssistant = () => {
         "http://localhost:3000/ask-chef",
         latestChatPrompt
       );
-      console.log(response);
+      // console.log(response);
+      console.log(response.data.response.content);
+      console.log(response.data.response.markdown);
+      const chatLog = response.data.response;
+      const content = response.data.response.content;
+      const markdown = response.data.response.markdown;
+      // Update chat state with the new chat entry
+      setChatHistory((prevChatHistory) => {
+        return [...prevChatHistory, chatLog]; // Append the new chat message
+      });
+
       // Set the response data in the state
     } catch (error) {
       // Handle any errors during the request

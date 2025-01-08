@@ -46,7 +46,7 @@ const Chatbox = ({ chatHistory }: { chatHistory: any[] }) => {
 
             {/* Chat Bubble */}
             <div
-              className={`px-4 py-2 rounded-xl ${
+              className={`px-4 py-2 rounded-xl whitespace-pre-wrap ${
                 chat.role === "user"
                   ? "max-w-sm bg-blue-500 text-white"
                   : "max-w-full pt-0 text-black"

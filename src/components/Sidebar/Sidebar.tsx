@@ -139,7 +139,7 @@ const AppSidebar = () => {
                           <CollapsibleContent className="CollapsibleContent">
                             <SidebarMenuSub className="pr-0 mr-0">
                               {cuisine.dishes.map((dish) => (
-                                <SidebarMenuButton asChild>
+                                <SidebarMenuButton key={dish.name} asChild>
                                   <a
                                     href={dish.url}
                                     className={`${linkStyles} flex items-center gap-2`}
