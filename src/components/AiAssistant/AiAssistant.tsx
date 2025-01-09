@@ -17,6 +17,7 @@ interface ChatMessage {
 const AiAssistant = () => {
   const [input, setInput] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [conversationId, setConversationId] = useState<any>(null);
 
   useEffect(() => {
     // Log chat history for debugging
@@ -40,17 +41,23 @@ const AiAssistant = () => {
         latestChatPrompt
       );
       // console.log(response);
-      console.log(response.data.response.content);
-      console.log(response.data.response.markdown);
-      const chatLog = response.data.response;
-      const content = response.data.response.content;
-      const markdown = response.data.response.markdown;
+
+      const userChatLog = response.data.userPrompt;
+      const gptChatLog = response.data.gptChat;
+      console.log("UserChat:", userChatLog);
+      console.log("GPTChat:", gptChatLog);
+
       // Update chat state with the new chat entry
       setChatHistory((prevChatHistory) => {
-        return [...prevChatHistory, chatLog]; // Append the new chat message
-      });
+        // Replace the last user message with the updated userChatLog
+        const updatedChatHistory = [...prevChatHistory];
+        updatedChatHistory[updatedChatHistory.length - 1] = userChatLog;
 
-      // Set the response data in the state
+        // Add the GPT chat log to the chat history
+        updatedChatHistory.push(gptChatLog);
+
+        return updatedChatHistory;
+      });
     } catch (error) {
       // Handle any errors during the request
       // setError(error.response ? error.response.data : 'An error occurred');
@@ -117,7 +124,10 @@ const AiAssistant = () => {
           <PromptInput
             input={input}
             setInput={setInput}
+            chatHistory={chatHistory}
             setChatHistory={setChatHistory}
+            conversationId={conversationId}
+            setConversationId={setConversationId}
           />
         </div>
       </div>

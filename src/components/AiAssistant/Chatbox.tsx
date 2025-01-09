@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 const Chatbox = ({ chatHistory }: { chatHistory: any[] }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -11,14 +12,23 @@ const Chatbox = ({ chatHistory }: { chatHistory: any[] }) => {
     }
   }, [chatHistory]); // This hook runs whenever chatHistory changes
 
+  const createNewConversation = () => {
+    // Clear chat history
+    // Create new conversation id
+    // make use of new conversation id in chatlog data
+  };
+
   return (
     <div className="">
-      <div>
+      <div className="flex justify-between items-center mb-2">
         <h1 className="text-2xl font-bold">Sous Chef</h1>
+        <Button variant="outline" onClick={createNewConversation}>
+          New Convo
+        </Button>
       </div>
       <div
         ref={chatContainerRef}
-        className="h-[calc(100vh-122px)] overflow-y-auto scroll-smooth"
+        className="h-[calc(100vh-130px)] overflow-y-auto scroll-smooth"
       >
         {chatHistory.map((chat, index) => (
           <div

@@ -1,13 +1,20 @@
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 
 const PromptInput = ({
   input,
   setInput,
+  chatHistory,
   setChatHistory,
+  conversationId,
+  setConversationId,
 }: {
   input: string;
   setInput: (value: string) => void;
+  chatHistory: any; // Using `any` for setChat
   setChatHistory: (value: any) => void; // Using `any` for setChat
+  conversationId: any;
+  setConversationId: (value: any) => void;
 }) => {
   // Handle the Enter key press to execute the action
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -21,21 +28,42 @@ const PromptInput = ({
     executeAction();
   };
 
+  const createNewConversation = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/create-conversation"
+      );
+      console.log(response);
+      return response.data.data.conversation_id;
+    } catch (error) {
+      // Handle any errors during the request
+      // setError(error.response ? error.response.data : 'An error occurred');
+    }
+  };
+
   // Function to execute the action (e.g., send input, trigger action, etc.)
-  const executeAction = () => {
+  const executeAction = async () => {
     console.log("Executing action with input:", input);
+
     const chatLog = {
-      id: "msg-12345",
       role: "user",
       content: input,
-      created_at: Date.now(),
-      conversation_id: "conv-67890",
-      user_id: "user-abc123",
-      session_id: "session-def456",
+      conversation_id: conversationId,
+      user_id: 1,
       message_type: "text",
       // status: "pending",
     };
-    // Update chat state with the new chat entry
+
+    // If no conversation Id due to first message, generate a new conversation id and append to chatlog
+    if (chatHistory.length === 0) {
+      console.log("Inital message. Create new convo id...");
+      const newConversationId = await createNewConversation();
+      chatLog.conversation_id = newConversationId;
+      setConversationId(newConversationId);
+    }
+
+    // console.log(chatLog);
+
     setChatHistory((prevChatHistory: any) => {
       return [...prevChatHistory, chatLog]; // Append the new chat message
     });
