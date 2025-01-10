@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Home,
   Search,
@@ -28,6 +28,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+
+import axios from "axios";
 
 const mainItems = [
   { title: "Search", url: "#", icon: Search },
@@ -70,6 +72,43 @@ const otherItems = [
 
 const AppSidebar = () => {
   const [openMenus, setOpenMenus] = useState<string[]>([]);
+
+  const [cuisines, setCuisines] = useState([]);
+
+  useEffect(() => {
+    getRecipes();
+  }, []);
+
+  const getRecipes = async () => {
+    try {
+      // Make the POST request to the API
+      const response = await axios.get(
+        "http://localhost:3000/get-sidebar-data"
+      );
+      // console.log(response);
+
+      console.log("response:", response);
+
+      if (response.status == 201) {
+        setCuisines(response.data.data[0].cuisines);
+      }
+
+      //   // Update chat state with the new chat entry
+      //   setChatHistory((prevChatHistory) => {
+      //     // Replace the last user message with the updated userChatLog
+      //     const updatedChatHistory = [...prevChatHistory];
+      //     updatedChatHistory[updatedChatHistory.length - 1] = userChatLog;
+
+      //     // Add the GPT chat log to the chat history
+      //     updatedChatHistory.push(gptChatLog);
+
+      //     return updatedChatHistory;
+      //   });
+    } catch (error) {
+      // Handle any errors during the request
+      // setError(error.response ? error.response.data : 'An error occurred');
+    }
+  };
 
   const toggleMenu = (menuTitle: string) => {
     setOpenMenus((prev) =>
@@ -118,42 +157,47 @@ const AppSidebar = () => {
                 </CollapsibleTrigger>
                 <CollapsibleContent className="CollapsibleContent">
                   <SidebarMenuSub className="pr-0 mr-0">
-                    {recipes.map((cuisine) => (
-                      <div key={cuisine.title}>
-                        <Collapsible
-                          defaultOpen={false}
-                          className="group/collapsible"
-                        >
-                          <CollapsibleTrigger asChild className="pr-0 mr-0">
-                            <SidebarMenuButton asChild className="pr-0 mr-0">
-                              <a
-                                href={"#"}
-                                className={`${linkStyles} flex items-center gap-2`}
-                              >
-                                <span>
-                                  {cuisine.icon} {cuisine.title}
-                                </span>
-                              </a>
-                            </SidebarMenuButton>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent className="CollapsibleContent">
-                            <SidebarMenuSub className="pr-0 mr-0">
-                              {cuisine.dishes.map((dish) => (
-                                <SidebarMenuButton key={dish.name} asChild>
-                                  <a
-                                    href={dish.url}
-                                    className={`${linkStyles} flex items-center gap-2`}
+                    {cuisines.length > 0 &&
+                      cuisines.map((cuisine: any) => (
+                        <div key={cuisine.cuisine_id}>
+                          <Collapsible
+                            defaultOpen={false}
+                            className="group/collapsible"
+                          >
+                            <CollapsibleTrigger asChild className="pr-0 mr-0">
+                              <SidebarMenuButton asChild className="pr-0 mr-0">
+                                <a
+                                  href={"#"}
+                                  className={`${linkStyles} flex items-center gap-2`}
+                                >
+                                  <span>
+                                    {cuisine.cuisine_icon}{" "}
+                                    {cuisine.cuisine_name}
+                                  </span>
+                                </a>
+                              </SidebarMenuButton>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="CollapsibleContent">
+                              <SidebarMenuSub className="pr-0 mr-0">
+                                {cuisine.recipes.map((recipe: any) => (
+                                  <SidebarMenuButton
+                                    key={recipe.recipe_id}
+                                    asChild
                                   >
-                                    {/* <item.icon /> */}
-                                    <span>{dish.name}</span>
-                                  </a>
-                                </SidebarMenuButton>
-                              ))}
-                            </SidebarMenuSub>
-                          </CollapsibleContent>
-                        </Collapsible>
-                      </div>
-                    ))}
+                                    <a
+                                      href={recipe.dish_name}
+                                      className={`${linkStyles} flex items-center gap-2`}
+                                    >
+                                      {/* <item.icon /> */}
+                                      <span>{recipe.dish_name}</span>
+                                    </a>
+                                  </SidebarMenuButton>
+                                ))}
+                              </SidebarMenuSub>
+                            </CollapsibleContent>
+                          </Collapsible>
+                        </div>
+                      ))}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
