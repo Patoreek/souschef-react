@@ -121,8 +121,8 @@ const AppSidebar = () => {
   const linkStyles = "text-gray-900";
 
   return (
-    <Sidebar>
-      <SidebarHeader>{/* Add your header content here */}</SidebarHeader>
+    <Sidebar className="relative">
+      {/* <SidebarHeader>Add your header content here</SidebarHeader> */}
       <SidebarContent>
         {/* Main Group */}
         <SidebarGroup>
@@ -133,7 +133,7 @@ const AppSidebar = () => {
                 <SidebarMenuButton asChild>
                   <a
                     href={item.url}
-                    className={`${linkStyles} flex items-center gap-2`}
+                    className={`${linkStyles} flex items-center gap-4`}
                   >
                     <item.icon />
                     <span>{item.title}</span>
@@ -148,7 +148,7 @@ const AppSidebar = () => {
                   <SidebarMenuButton asChild>
                     <a
                       href={"#"}
-                      className={`${linkStyles} flex items-center gap-2`}
+                      className={`${linkStyles} flex items-center gap-4`}
                     >
                       <ChefHat />
                       <span>Recipes</span>
@@ -168,7 +168,7 @@ const AppSidebar = () => {
                               <SidebarMenuButton asChild className="pr-0 mr-0">
                                 <a
                                   href={"#"}
-                                  className={`${linkStyles} flex items-center gap-2`}
+                                  className={`${linkStyles} flex items-center gap-4`}
                                 >
                                   <span>
                                     {cuisine.cuisine_icon}{" "}
@@ -186,7 +186,7 @@ const AppSidebar = () => {
                                   >
                                     <a
                                       href={recipe.dish_name}
-                                      className={`${linkStyles} flex items-center gap-2`}
+                                      className={`${linkStyles} flex items-center gap-4`}
                                     >
                                       {/* <item.icon /> */}
                                       <span>{recipe.dish_name}</span>
@@ -213,7 +213,7 @@ const AppSidebar = () => {
                 <SidebarMenuButton asChild>
                   <a
                     href={item.url}
-                    className={`${linkStyles} flex items-center gap-2`}
+                    className={`${linkStyles} flex items-center gap-4`}
                   >
                     <item.icon />
                     <span>{item.title}</span>
